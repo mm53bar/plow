@@ -1,4 +1,4 @@
-# Bash Deployment #
+# Bash Deployment with Plow#
 
 Install with the following command:
 
