@@ -2,7 +2,7 @@
 
 Install with the following command:
 
-     curl https://github.com/mm53bar/plow/blob/master/install.sh | sh
+     curl https://raw.github.com/mm53bar/plow/master/install.sh | sh
 
 Run `bin/deploy` and relax!
 
