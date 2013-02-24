@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+set -e
+
+# get config settings
+source .env
+
+# process arguments
+while test $# != 0; do
+  case "$1" in
+    --rev=*)
+      REF="${1#--rev=}"
+  esac
+  shift
+done
+
+echo "Processing  deploy"
+if [ -z "$REF" ]; then
+  REMOTE_REF=origin/$BRANCH
+else
+  REMOTE_REF=origin/$REF
+fi
+  
+scp .env $APP@$SERVER:$DEPLOY/.env
+
+ssh $APP@$SERVER "sh -l -c 'cd $DEPLOY && \
+                  git fetch origin && git reset --hard $REMOTE_REF && \
+                  (git rev-parse HEAD > $DEPLOY/REVISION) && \
+                  bin/bundle install --deployment --quiet --binstubs \
+                          --without development test && \
+                  bin/foreman run rake assets:precompile && \
+                  bin/bluepill --no-privileged -c $DEPLOY/tmp restart'"
