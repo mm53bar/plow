@@ -20,7 +20,7 @@
 #     See the source: https://github.com/mm53bar/plow/
 #
 #     Install Plow by running this command:
-#     curl http://git.io/2tND0A | sh
+#     curl https://raw.github.com/mm53bar/plow/master/install.sh | sh
 
 # Set up the environment
 
