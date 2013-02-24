@@ -27,12 +27,15 @@
       set -e
 
 # Create the bin folder if it doesn't already exist
+
       mkdir -p bin
 
 # Download the plow scripts
+
       curl -L https://raw.github.com/mm53bar/plow/master/bin/deploy -o bin/deploy
       curl -L https://raw.github.com/mm53bar/plow/master/bin/migrate -o bin/migrate
       curl -L https://raw.github.com/mm53bar/plow/master/.env.sample -o .env.sample
+
 # Set the permissions for the scripts
 
       chmod +x bin/deploy
