@@ -32,9 +32,9 @@
 
 # Download the plow scripts
 
-      curl -L https://raw.github.com/mm53bar/plow/master/bin/deploy -o bin/deploy
-      curl -L https://raw.github.com/mm53bar/plow/master/bin/migrate -o bin/migrate
-      curl -L https://raw.github.com/mm53bar/plow/master/.env.sample -o .env.sample
+      curl -s -L https://raw.github.com/mm53bar/plow/master/bin/deploy -o bin/deploy
+      curl -s -L https://raw.github.com/mm53bar/plow/master/bin/migrate -o bin/migrate
+      curl -s -L https://raw.github.com/mm53bar/plow/master/.env.sample -o .env.sample
 
 # Set the permissions for the scripts
 
