@@ -20,6 +20,14 @@ Copy the settings from .env.sample to your own .env file.
 
 If you want to deploy a branch, just call `bin/deploy --rev=branch_name`.
 
+## Functions ##
+
+* [bin/deploy](https://github.com/mm53bar/plow/blob/master/bin/deploy)
+* [bin/migrate](https://github.com/mm53bar/plow/blob/master/bin/migrate)
+* start
+* stop
+* setup
+
 ## Troubleshooting ##
 
 Make sure you have your [ssh-config set up to forward your ssh keys](https://help.github.com/articles/using-ssh-agent-forwarding).
