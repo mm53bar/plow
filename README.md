@@ -8,11 +8,11 @@ The idea here is that you take plow and customize it to your liking. I use bluep
 
 ## Usage ##
 
-Install with the following command:
+`cd` to your project directory. Install plow with the following command:
 
      curl https://raw.github.com/mm53bar/plow/master/install.sh | sh
 
-Run `bin/deploy` and relax!
+Now you'll have some bash scripts in your `bin/` folder that will help you deploy the app. Start with `bin/deploy` to see how it works.
 
 ## Config Settings ##
 
