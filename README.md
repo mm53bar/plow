@@ -2,7 +2,9 @@
 
 Capistrano is a great tool but hard to customize or extend. There isn't good documentation and the code is somewhat hard to read.
 
-So I decided to see what I could do if I just whipped up a few simple bash scripts that would do the deployment for me. 
+So I decided to see what I could do if I just whipped up a few simple bash scripts that would do the deployment for me.
+
+The idea here is that you take plow and customize it to your liking. I use bluepill to manage my unicorns. Don't use bluepill? Fine by me! Fork the repo and update `bin/deploy` to restart unicorn directly. You're only going to have to change one line of code.
 
 ## Usage ##
 
