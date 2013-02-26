@@ -34,12 +34,18 @@
 
       curl -s -L https://raw.github.com/mm53bar/plow/master/bin/deploy -o bin/deploy
       curl -s -L https://raw.github.com/mm53bar/plow/master/bin/migrate -o bin/migrate
+      curl -s -L https://raw.github.com/mm53bar/plow/master/bin/migrate -o bin/start
+      curl -s -L https://raw.github.com/mm53bar/plow/master/bin/migrate -o bin/stop
+      curl -s -L https://raw.github.com/mm53bar/plow/master/bin/migrate -o bin/status
       curl -s -L https://raw.github.com/mm53bar/plow/master/.env.sample -o .env.sample
 
 # Set the permissions for the scripts
 
       chmod +x bin/deploy
       chmod +x bin/migrate
+      chmod +x bin/start
+      chmod +x bin/stop
+      chmod +x bin/status
 
 # All done
 
