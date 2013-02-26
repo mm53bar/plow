@@ -1,8 +1,10 @@
 # Bash Deployment with Plow#
 
-Capistrano is a great tool but hard to customize or extend. There isn't good documentation and the code is somewhat hard to read.
+I've been rethinking my use of capistrano.  My config files seem bloated with settings that are less about deployment and more about configuration. My callbacks are getting out of control. Going with a [git-based strategy](https://github.com/blog/470-deployment-script-spring-cleaning) requires replacing a bunch of standard tasks.
 
-So I decided to see what I could do if I just whipped up a few simple bash scripts that would do the deployment for me.
+Ultimately, it seems like Capistrano is more of a platform than a tool. I still like it but I want to see what else might work.
+
+I decided to see what I could do if I just whipped up a few simple bash scripts that would do the deployment for me. No callbacks and leveraging the [foreman config that I already have](http://www.12factor.net/config).
 
 The idea here is that you take plow and customize it to your liking. I use bluepill to manage my unicorns. Don't use bluepill? Fine by me! Fork the repo and update `bin/deploy` to restart unicorn directly. You're only going to have to change [one line of code](https://github.com/mm53bar/plow/blob/master/bin/deploy#L32).
 
