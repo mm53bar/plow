@@ -20,8 +20,8 @@ if [ -z "$REF" ]; then
 else
   REMOTE_REF=origin/$REF
 fi
-  
-scp .env $APP@$SERVER:$DEPLOY/.env
+
+cat .env .env.production | ssh $APP@$SERVER "cat >$DEPLOY/.env"
 
 ssh $APP@$SERVER "sh -l -c 'cd $DEPLOY && \
                   git fetch origin && git reset --hard $REMOTE_REF && \
