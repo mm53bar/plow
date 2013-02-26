@@ -28,8 +28,9 @@ If you want to deploy a branch, just call `bin/deploy --rev=branch_name`.
 
 * [bin/deploy](https://github.com/mm53bar/plow/blob/master/bin/deploy)
 * [bin/migrate](https://github.com/mm53bar/plow/blob/master/bin/migrate)
-* start
-* stop
+* [bin/start](https://github.com/mm53bar/plow/blob/master/bin/start)
+* [bin/stop](https://github.com/mm53bar/plow/blob/master/bin/stop)
+* [bin/status](https://github.com/mm53bar/plow/blob/master/bin/status)
 * setup
 
 ## Troubleshooting ##
