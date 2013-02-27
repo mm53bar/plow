@@ -24,7 +24,9 @@ else
   REMOTE_REF=origin/$REF
 fi
 
-cat .env .env.production | ssh $APP@$SERVER "cat >$DEPLOY/.env"
+source .env.$TARGET_ENV
+
+scp .env.$TARGET_ENV $APP@$SERVER:$DEPLOY/.env
 
 ssh $APP@$SERVER "sh -l -c 'cd $DEPLOY && \
                   git fetch origin && git reset --hard $REMOTE_REF && \
