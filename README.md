@@ -16,9 +16,11 @@ The idea here is that you take plow and customize it to your liking. I use bluep
 
 Now you'll have some bash scripts in your `bin/` folder that will help you deploy the app. Start with `bin/deploy` to see how it works.
 
-## Config Settings ##
+## What's with the .env? ##
 
-Copy the settings from .env.sample to your own .env file.
+Storing your config settings in an `.env` file is something I first read about in the [12-Factor app docs](http://www.12factor.net/config). Foreman also supports the `.env` files. It just made sense that when I started looking for a place to store config settings, an `.env` file made more sense than something like a Capfile.
+
+I've also pushed this a bit further when it comes to support multi-stage deployments. If you are deploying your code to a staging environment, create an `.env.staging` file in your app with all of your staging settings. For production, create an `env.production` file. Those files will get copied up to your server as `.env`.
 
 ## Branches ##
 
