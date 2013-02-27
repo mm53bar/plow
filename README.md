@@ -10,21 +10,33 @@ The idea here is that you take plow and customize it to your liking. I use bluep
 
 ## Usage ##
 
-`cd` to your project directory. Install plow with the following command:
+    bin/deploy                          # deploys master to production server
+    bin/deploy staging                  # deploys master to staging server
+    bin/deploy --rev=feature43          # deploys feature43 branch to production
+    bin/deploy --rev=feature43 staging  # deploys feature43 to staging
+
+Other scripts included:
+
+    bin/migrate [server]
+    bin/start [server]
+    bin/stop [server]
+    bin/status [server]
+
+`bin/deploy` does a git fetch, bundle install, asset:precompile and restart. By default it uses bluepill and foreman but the idea is that you customize it after you install the scripts.
+
+## Install ##
+
+`cd` to your rails app. Install plow with the following command:
 
      curl https://raw.github.com/mm53bar/plow/master/install.sh | sh
 
-Now you'll have some bash scripts in your `bin/` folder that will help you deploy the app. Start with `bin/deploy` to see how it works.
+Now you'll have some bash scripts in your `bin/` folder that will help you deploy your app. Look at `bin/deploy` to see how it works.
 
-## What's with the .env? ##
+## What's with the .env files? ##
 
 Storing your config settings in an `.env` file is something I first read about in the [12-Factor app docs](http://www.12factor.net/config). Foreman also supports the `.env` files. When I started looking for a place to store config settings, an `.env` file made more sense than something like a Capfile.
 
 I've also pushed this a bit further when it comes to support multi-stage deployments. If you are deploying your code to a staging environment, create an `.env.staging` file in your app with all of your staging settings. For production, create an `env.production` file. Those files will get copied up to your server as `.env`.
-
-## Branches ##
-
-If you want to deploy a branch, just call `bin/deploy --rev=branch_name`.
 
 ## Functions ##
 
