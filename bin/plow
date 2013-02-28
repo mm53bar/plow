@@ -28,7 +28,7 @@ while test $# != 0; do
 done
 
 wget -nc -qP .deploy -q https://gist.github.com/mm53bar/5053150/raw/b854cdd4a3204e1d5f1de8b42d245ed729736cb0/test
-wget -nc -qP .deploy -q https://gist.github.com/mm53bar/5053150/raw/01fb4e5318d41b95967231aec11dfc4138f0b206/status
+wget -nc -qP .deploy -q https://gist.github.com/mm53bar/5053150/raw/5b04df0ec0f8e15f957e4db76a83c87ccdaf8d70/gitrev
 
 files=`find .deploy -type f`
 for file in $files; do
