@@ -1,19 +1,8 @@
 #!/usr/bin/env bash
 
-set -e
+if [ -n "$stop" ]; then
+  echo "Processing recipe: stop"
 
-TARGET_ENV=production
-
-while test $# != 0; do
-  case "$1" in
-    --staging|staging)
-      TARGET_ENV=staging
-      ;; 
-  esac
-  shift
-done
-
-source .env.$TARGET_ENV
-
-ssh $APP@$SERVER "sh -l -c 'cd $DEPLOY && \
-                  bin/bluepill --no-privileged -c $DEPLOY/tmp stop'"
+  ssh $APP@$SERVER "sh -l -c 'cd $DEPLOY && \
+                    bin/bluepill --no-privileged -c $DEPLOY/tmp stop'"
+fi

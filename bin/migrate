@@ -1,20 +1,8 @@
 #!/usr/bin/env bash
 
-set -e
+if [ -n "$migrate" ]; then
+  echo "Processing recipe: migrate"
 
-TARGET_ENV=production
-
-while test $# != 0; do
-  case "$1" in
-    --staging|staging)
-      TARGET_ENV=staging
-      ;; 
-  esac
-  shift
-done
-
-source .env.$TARGET_ENV
-
-echo "Migrating database"
-ssh $APP@$SERVER "sh -l -c 'cd $DEPLOY && \
-                  bin/foreman run rake db:migrate'"
+  ssh $APP@$SERVER "sh -l -c 'cd $DEPLOY && \
+                    bin/foreman run rake db:migrate'"
+fi

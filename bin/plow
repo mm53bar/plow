@@ -34,4 +34,7 @@ done
 
 recipe https://gist.github.com/mm53bar/5053150/raw/b854cdd4a3204e1d5f1de8b42d245ed729736cb0/test
 recipe https://gist.github.com/mm53bar/5053150/raw/9c883ff5bf4f50f2f4c59e5a1e4ed321b49ab39f/gitrev
-
+recipe https://raw.github.com/mm53bar/plow/recipes/bin/deploy
+recipe https://raw.github.com/mm53bar/plow/recipes/bin/migrate
+recipe https://raw.github.com/mm53bar/plow/recipes/bin/start
+recipe https://raw.github.com/mm53bar/plow/recipes/bin/stop
