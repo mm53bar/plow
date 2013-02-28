@@ -3,7 +3,7 @@
 if [ -n "$deploy" ]; then
   echo "Processing recipe: deploy"
 
-  scp .env.$TARGET_ENV $APP@$SERVER:$DEPLOY/.env
+  scp .env.$ENVIRONMENT $APP@$SERVER:$DEPLOY/.env
   ssh $APP@$SERVER "sh -l -c 'cd $DEPLOY && \
                     git fetch origin && git reset --hard $REMOTE_REF && \
                     (git rev-parse HEAD > $DEPLOY/REVISION) && \

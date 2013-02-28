@@ -16,10 +16,12 @@ while test $# != 0; do
   case "$1" in
     --staging|staging)
       [[ -f .env.staging ]] || bail "no .env.staging found"
+      ENVIRONMENT=staging
       source .env.staging
       ;;
     --production|production)
       [[ -f .env.production ]] || bail "no .env.production found"
+      ENVIRONMENT=production
       source .env.production
       ;;
     --rev=*)
