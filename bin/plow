@@ -12,6 +12,7 @@ recipe https://raw.github.com/mm53bar/plow/recipes/bin/deploy
 recipe https://raw.github.com/mm53bar/plow/recipes/bin/migrate
 recipe https://raw.github.com/mm53bar/plow/recipes/bin/start
 recipe https://raw.github.com/mm53bar/plow/recipes/bin/stop
+recipe https://raw.github.com/mm53bar/plow/recipes/bin/status
 
 bail() {
   echo -e "\033[31m  failed: $1\033[0m"
