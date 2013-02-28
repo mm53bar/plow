@@ -1,8 +1,4 @@
-#!/usr/bin/env bash
+echo "Processing recipe: migrate"
 
-if [ -n "$migrate" ]; then
-  info "Processing recipe: migrate"
-
-  ssh $APP@$SERVER "sh -l -c 'cd $DEPLOY && \
-                    bin/foreman run rake db:migrate'"
-fi
+cd $DEPLOY
+bin/foreman run rake db:migrate

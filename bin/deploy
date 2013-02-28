@@ -1,14 +1,8 @@
-#!/usr/bin/env bash
+echo "Processing recipe: deploy"
 
-if [ -n "$deploy" ]; then
-  info "Processing recipe: deploy"
-
-  scp .env.$ENVIRONMENT $APP@$SERVER:$DEPLOY/.env
-  ssh $APP@$SERVER "sh -l -c 'cd $DEPLOY && \
-                    git fetch origin && git reset --hard $REMOTE_REF && \
-                    (git rev-parse HEAD > $DEPLOY/REVISION) && \
-                    bin/bundle install --deployment --quiet --binstubs \
-                            --without development test && \
-                    bin/foreman run rake assets:precompile && \
-                    bin/bluepill --no-privileged -c $DEPLOY/tmp restart'"
-fi
+cd $DEPLOY
+git fetch origin && git reset --hard $REMOTE_REF
+(git rev-parse HEAD > $DEPLOY/REVISION)
+bin/bundle install --deployment --quiet --binstubs --without development test
+bin/foreman run rake assets:precompile
+bin/bluepill --no-privileged -c $DEPLOY/tmp restart

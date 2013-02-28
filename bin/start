@@ -1,8 +1,5 @@
-#!/usr/bin/env bash
+echo "Processing recipe: start"
 
-if [ -n "$start" ]; then
-  info "Processing recipe: start"
+cd $DEPLOY
+bin/bluepill --no-privileged -c $DEPLOY/tmp load ./config/bluepill.rb
 
-  ssh $APP@$SERVER "sh -l -c 'cd $DEPLOY && \
-                    bin/bluepill --no-privileged -c $DEPLOY/tmp load ./config/bluepill.rb'"
-fi
