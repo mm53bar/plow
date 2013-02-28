@@ -2,8 +2,21 @@
 
 set -e
 
+bail() {
+  echo "  failed: $1"
+  exit 1
+}
+
 while test $# != 0; do
   case "$1" in
+    --staging|staging)
+      [[ -f .env.staging ]] && bail "no .env.staging found"
+      source .env.staging
+      ;;
+    --production|production)
+      [[ -f .env.produciton ]] && bail "no .env.production found"
+      source .env.production
+      ;;
     --rev=*)
       REF="${1#--rev=}"
       ;;
@@ -15,6 +28,7 @@ while test $# != 0; do
 done
 
 wget -nc -qP .deploy -q https://gist.github.com/mm53bar/5053150/raw/b854cdd4a3204e1d5f1de8b42d245ed729736cb0/test
+wget -nc -qP .deploy -q https://gist.github.com/mm53bar/5053150/raw/01fb4e5318d41b95967231aec11dfc4138f0b206/status
 
 files=`find .deploy -type f`
 for file in $files; do
