@@ -39,7 +39,7 @@ while test $# != 0; do
 done
 
 recipe https://gist.github.com/mm53bar/5053150/raw/ff4b353b9671fc541785860e58b9cc9dcebd0820/test
-recipe https://gist.github.com/mm53bar/5053150/raw/3590bbf76ba83521049816a67d68745e63ced0d1/gitrev
+recipe https://gist.github.com/mm53bar/5053150/raw/bb9f7deb7f93b940c48e399e2629cfce8b458cc8/gitrev
 recipe https://raw.github.com/mm53bar/plow/recipes/bin/deploy
 recipe https://raw.github.com/mm53bar/plow/recipes/bin/migrate
 recipe https://raw.github.com/mm53bar/plow/recipes/bin/start
