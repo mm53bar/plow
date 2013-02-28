@@ -8,7 +8,7 @@ bail() {
 }
 
 recipe() {
-  wget -nc -qP .plow -q $1
+  wget -nc -qP .plow $1
   source .plow/$(basename "$1")
 }
 
