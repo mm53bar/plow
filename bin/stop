@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 if [ -n "$stop" ]; then
-  echo "Processing recipe: stop"
+  info "Processing recipe: stop"
 
   ssh $APP@$SERVER "sh -l -c 'cd $DEPLOY && \
                     bin/bluepill --no-privileged -c $DEPLOY/tmp stop'"

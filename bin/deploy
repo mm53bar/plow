@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 if [ -n "$deploy" ]; then
-  echo "Processing recipe: deploy"
+  info "Processing recipe: deploy"
 
   scp .env.$ENVIRONMENT $APP@$SERVER:$DEPLOY/.env
   ssh $APP@$SERVER "sh -l -c 'cd $DEPLOY && \
