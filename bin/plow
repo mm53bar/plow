@@ -15,11 +15,11 @@ recipe() {
 while test $# != 0; do
   case "$1" in
     --staging|staging)
-      [[ -f .env.staging ]] && bail "no .env.staging found"
+      [[ -f .env.staging ]] || bail "no .env.staging found"
       source .env.staging
       ;;
     --production|production)
-      [[ -f .env.produciton ]] && bail "no .env.production found"
+      [[ -f .env.production ]] || bail "no .env.production found"
       source .env.production
       ;;
     --rev=*)
