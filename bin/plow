@@ -8,7 +8,8 @@ bail() {
 }
 
 recipe() {
-  wget -nc -qP .deploy -q $1
+  wget -nc -qP .plow -q $1
+  source .plow/$(basename "$1")
 }
 
 while test $# != 0; do
@@ -34,7 +35,3 @@ done
 recipe https://gist.github.com/mm53bar/5053150/raw/b854cdd4a3204e1d5f1de8b42d245ed729736cb0/test
 recipe https://gist.github.com/mm53bar/5053150/raw/9c883ff5bf4f50f2f4c59e5a1e4ed321b49ab39f/gitrev
 
-files=`find .deploy -type f`
-for file in $files; do
-  source $file
-done
