@@ -7,6 +7,10 @@ bail() {
   exit 1
 }
 
+recipe() {
+  wget -nc -qP .deploy -q $1
+}
+
 while test $# != 0; do
   case "$1" in
     --staging|staging)
@@ -27,8 +31,8 @@ while test $# != 0; do
   shift
 done
 
-wget -nc -qP .deploy -q https://gist.github.com/mm53bar/5053150/raw/b854cdd4a3204e1d5f1de8b42d245ed729736cb0/test
-wget -nc -qP .deploy -q https://gist.github.com/mm53bar/5053150/raw/9c883ff5bf4f50f2f4c59e5a1e4ed321b49ab39f/gitrev
+recipe https://gist.github.com/mm53bar/5053150/raw/b854cdd4a3204e1d5f1de8b42d245ed729736cb0/test
+recipe https://gist.github.com/mm53bar/5053150/raw/9c883ff5bf4f50f2f4c59e5a1e4ed321b49ab39f/gitrev
 
 files=`find .deploy -type f`
 for file in $files; do
