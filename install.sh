@@ -20,7 +20,7 @@
 #     See the source: https://github.com/mm53bar/plow/
 #
 #     Install Plow by running this command:
-#     curl https://raw.github.com/mm53bar/plow/master/install.sh | sh
+#     curl https://raw.github.com/mm53bar/plow/recipes/install.sh | sh
 
 # Set up the environment
 
@@ -32,7 +32,7 @@
 
 # Download the plow scripts
 
-      curl -s -L https://raw.github.com/mm53bar/plow/master/bin/plow -o bin/plow
+      curl -s -L https://raw.github.com/mm53bar/plow/recipes/bin/plow -o bin/plow
 
 # Set the permissions for the scripts
 
