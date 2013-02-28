@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+set -e
+
+while test $# != 0; do
+  case "$1" in
+    --rev=*)
+      REF="${1#--rev=}"
+      ;;
+    *)
+      export $1=true
+      ;;      
+  esac
+  shift
+done
+
+wget -nc -qP .deploy -q https://gist.github.com/mm53bar/5053150/raw/b854cdd4a3204e1d5f1de8b42d245ed729736cb0/test
+
+files=`find .deploy -type f`
+for file in $files; do
+  source $file
+done
