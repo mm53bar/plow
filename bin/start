@@ -1,5 +1,3 @@
-echo "Processing recipe: start"
-
 cd $DEPLOY
 bin/bluepill --no-privileged -c $DEPLOY/tmp load ./config/bluepill.rb
 

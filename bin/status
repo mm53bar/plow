@@ -1,4 +1,2 @@
-echo "Processing recipe: status"
-
 cd $DEPLOY
 bin/bluepill --no-privileged -c $DEPLOY/tmp status

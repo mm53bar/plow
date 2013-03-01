@@ -6,8 +6,8 @@ recipe() {
   wget -nc -qP .plow $1
 }
 
-recipe https://gist.github.com/mm53bar/5053150/raw/ff4b353b9671fc541785860e58b9cc9dcebd0820/test
-recipe https://gist.github.com/mm53bar/5053150/raw/bb9f7deb7f93b940c48e399e2629cfce8b458cc8/gitrev
+recipe https://gist.github.com/mm53bar/5053150/raw/545089b862a29d1029b8df6005b4b422d3363986/test
+recipe https://gist.github.com/mm53bar/5053150/raw/0e870a3a0842f9eb1129f546baf1f63febcac70c/gitrev
 recipe https://raw.github.com/mm53bar/plow/recipes/bin/deploy
 recipe https://raw.github.com/mm53bar/plow/recipes/bin/migrate
 recipe https://raw.github.com/mm53bar/plow/recipes/bin/start
@@ -23,17 +23,17 @@ info() {
   echo -e "\033[1;33m== $1\033[0m"
 }
 
+ENVIRONMENT=production
+
 while test $# != 0; do
   case "$1" in
     --staging|staging)
       [[ -f .env.staging ]] || bail "no .env.staging found"
-      source .env.staging
-      recipes+=(".env.staging")
+      ENVIRONMENT=staging
       ;;
     --production|production)
       [[ -f .env.production ]] || bail "no .env.production found"
-      source .env.production
-      recipes+=(".env.production")
+      ENVIRONMENT=production
       ;;
     --rev=*)
       REF="${1#--rev=}"
@@ -45,7 +45,10 @@ while test $# != 0; do
   shift
 done
 
+recipe_content=`cat .env.$ENVIRONMENT`
 for recipe in ${recipes[@]} ; do
-  recipe_content+=`cat $recipe;echo`
+  recipe_content+=`echo;echo "echo '== Processing recipe: $(basename $recipe)'"`
+  recipe_content+=`echo;cat $recipe`
 done
+source .env.$ENVIRONMENT
 ssh $APP@$SERVER "echo '$recipe_content' > plow.sh && $sudo bash plow.sh"

@@ -1,4 +1,2 @@
-echo "Processing recipe: migrate"
-
 cd $DEPLOY
 bin/foreman run rake db:migrate

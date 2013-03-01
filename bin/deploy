@@ -1,5 +1,3 @@
-echo "Processing recipe: deploy"
-
 cd $DEPLOY
 git fetch origin && git reset --hard $REMOTE_REF
 (git rev-parse HEAD > $DEPLOY/REVISION)
