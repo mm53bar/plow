@@ -45,5 +45,7 @@ while test $# != 0; do
   shift
 done
 
-[[ -n ${recipes[@]} ]] && \
-  ssh $APP@$SERVER "sh -l -c '$(cat ${recipes[@]})'"
+for recipe in ${recipes[@]} ; do
+  recipe_content+=`cat $recipe;echo`
+done
+ssh $APP@$SERVER "echo '$recipe_content' > plow.sh && $sudo bash plow.sh"
