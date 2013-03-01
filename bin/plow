@@ -13,6 +13,7 @@ recipe https://raw.github.com/mm53bar/plow/recipes/bin/migrate
 recipe https://raw.github.com/mm53bar/plow/recipes/bin/start
 recipe https://raw.github.com/mm53bar/plow/recipes/bin/stop
 recipe https://raw.github.com/mm53bar/plow/recipes/bin/status
+recipe https://raw.github.com/mm53bar/plow/recipes/bin/whoami
 
 bail() {
   echo -e "\033[31m  failed: $1\033[0m"
@@ -23,20 +24,27 @@ info() {
   echo -e "\033[1;33m== $1\033[0m"
 }
 
-ENVIRONMENT=production
-
 while test $# != 0; do
   case "$1" in
     --staging|staging)
       [[ -f .env.staging ]] || bail "no .env.staging found"
       ENVIRONMENT=staging
+      source .env.$ENVIRONMENT
       ;;
     --production|production)
       [[ -f .env.production ]] || bail "no .env.production found"
       ENVIRONMENT=production
+      source .env.$ENVIRONMENT
+      ;;
+    --sudo|sudo)
+      SUDO=sudo
       ;;
     --rev=*)
       REF="${1#--rev=}"
+      ;;
+    --*)
+      tmp=${1:2}
+      eval ${tmp%=*}=${tmp#*=} 
       ;;
     *)
       [[ -f .plow/$(basename $1) ]] && recipes+=(".plow/$(basename $1)")
@@ -50,5 +58,4 @@ for recipe in ${recipes[@]} ; do
   recipe_content+=`echo;echo "echo '== Processing recipe: $(basename $recipe)'"`
   recipe_content+=`echo;cat $recipe`
 done
-source .env.$ENVIRONMENT
-ssh $APP@$SERVER "echo '$recipe_content' > plow.sh && $sudo bash plow.sh"
+ssh $USER@$SERVER "echo '$recipe_content' > plow.sh && $SUDO bash plow.sh"
