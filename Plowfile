@@ -1,0 +1,18 @@
+RECIPES=(
+  https://gist.github.com/mm53bar/5053150/raw/545089b862a29d1029b8df6005b4b422d3363986/test
+  https://gist.github.com/mm53bar/5053150/raw/0e870a3a0842f9eb1129f546baf1f63febcac70c/gitrev
+  https://raw.github.com/mm53bar/plow/recipes/bin/deploy
+  https://raw.github.com/mm53bar/plow/recipes/bin/migrate
+  https://raw.github.com/mm53bar/plow/recipes/bin/start
+  https://raw.github.com/mm53bar/plow/recipes/bin/stop
+  https://raw.github.com/mm53bar/plow/recipes/bin/status
+  https://raw.github.com/mm53bar/plow/recipes/bin/whoami
+  https://gist.github.com/mm53bar/5053150/raw/a5f15f20e3f6bae7739dc5ec5621daa8de975ac1/nginx_unicorn
+)
+ 
+FILES=(
+Banana
+Apple
+Orange
+Pineapple
+)

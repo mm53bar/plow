@@ -6,15 +6,6 @@ recipe() {
   wget -nc -qP .plow $1
 }
 
-recipe https://gist.github.com/mm53bar/5053150/raw/545089b862a29d1029b8df6005b4b422d3363986/test
-recipe https://gist.github.com/mm53bar/5053150/raw/0e870a3a0842f9eb1129f546baf1f63febcac70c/gitrev
-recipe https://raw.github.com/mm53bar/plow/recipes/bin/deploy
-recipe https://raw.github.com/mm53bar/plow/recipes/bin/migrate
-recipe https://raw.github.com/mm53bar/plow/recipes/bin/start
-recipe https://raw.github.com/mm53bar/plow/recipes/bin/stop
-recipe https://raw.github.com/mm53bar/plow/recipes/bin/status
-recipe https://raw.github.com/mm53bar/plow/recipes/bin/whoami
-
 bail() {
   echo -e "\033[31m  failed: $1\033[0m"
   exit 1
@@ -23,6 +14,14 @@ bail() {
 info() {
   echo -e "\033[1;33m== $1\033[0m"
 }
+
+declare -a commands
+
+source Plowfile
+for i in "${RECIPES[@]}"
+do
+	recipe $i
+done
 
 while test $# != 0; do
   case "$1" in
@@ -47,15 +46,13 @@ while test $# != 0; do
       eval ${tmp%=*}=${tmp#*=} 
       ;;
     *)
-      [[ -f .plow/$(basename $1) ]] && recipes+=(".plow/$(basename $1)")
+      [[ -f .plow/$(basename $1) ]] && commands[${#commands[@]}]=".plow/$(basename $1)"
       ;;
   esac
   shift
 done
 
-recipe_content=`cat .env.$ENVIRONMENT`
-for recipe in ${recipes[@]} ; do
-  recipe_content+=`echo;echo "echo '== Processing recipe: $(basename $recipe)'"`
-  recipe_content+=`echo;cat $recipe`
-done
-ssh $USER@$SERVER "echo '$recipe_content' > plow.sh && $SUDO bash plow.sh"
+recipe_content=$(find ${commands[@]} -type f | xargs -I % sh -c "echo ; echo 'echo '== Processing recipe: $(basename %)'' ; cat %")
+environment_content=$(cat .env.$ENVIRONMENT)
+
+ssh $USER@$SERVER "echo '$environment_content $recipe_content' > plow.sh && $SUDO bash plow.sh"
