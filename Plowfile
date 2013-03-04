@@ -11,8 +11,6 @@ RECIPES=(
 )
  
 FILES=(
-Banana
-Apple
-Orange
-Pineapple
+  ~/Dropbox/AMA/accounts.yml
+  ~/.ssh/id_rsa.pub
 )

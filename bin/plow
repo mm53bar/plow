@@ -54,5 +54,7 @@ done
 
 recipe_content=$(find ${commands[@]} -type f | xargs -I % sh -c "echo ; echo 'echo '== Processing recipe: $(basename %)'' ; cat %")
 environment_content=$(cat .env.$ENVIRONMENT)
+mkdir -p .plow && echo "$environment_content $recipe_content" > .plow/plow.sh
+mkdir -p .plow/files && cp ${FILES[@]} .plow/files/
 
-ssh $USER@$SERVER "mkdir -p plow && cd plow && echo '$environment_content $recipe_content' > plow.sh && $SUDO bash plow.sh"
+cd .plow && tar cz . | ssh $USER@$SERVER "rm -rf plow && mkdir plow && cd plow && tar xz && $SUDO bash plow.sh"
