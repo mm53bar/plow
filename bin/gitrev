@@ -1,0 +1,2 @@
+cd $DEPLOY
+git rev-parse HEAD

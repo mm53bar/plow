@@ -32,7 +32,12 @@
 
 # Download the plow scripts
 
-      curl -s -L https://raw.github.com/mm53bar/plow/recipes/bin/plow -o bin/plow
+      curl -s -L https://raw.github.com/mm53bar/plow/master/bin/plow -o bin/plow
+      
+# Downoad support files
+
+      curl -s -L https://raw.github.com/mm53bar/plow/master/Plowfile -o Plowfile
+      curl -s -L https://raw.github.com/mm53bar/plow/master/.env.sample -o .env.sample
 
 # Set the permissions for the scripts
 
@@ -42,4 +47,4 @@
 
       echo 'Installed!'
       echo      
-      echo 'Be sure to update .env.sample. Then copy it to .env.'
+      echo 'Be sure to update .env.sample. Then copy it to .env.production'

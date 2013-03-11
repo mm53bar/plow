@@ -1,6 +1,0 @@
-cd $DEPLOY
-git fetch origin && git reset --hard $REMOTE_REF
-(git rev-parse HEAD > $DEPLOY/REVISION)
-bin/bundle install --deployment --quiet --binstubs --without development test
-bin/foreman run rake assets:precompile
-bin/bluepill --no-privileged -c $DEPLOY/tmp restart

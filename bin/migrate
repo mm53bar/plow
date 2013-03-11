@@ -1,2 +1,0 @@
-cd $DEPLOY
-bin/foreman run rake db:migrate

@@ -1,2 +1,0 @@
-cd $DEPLOY
-bin/bluepill --no-privileged -c $DEPLOY/tmp stop
