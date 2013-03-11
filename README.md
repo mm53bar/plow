@@ -10,14 +10,14 @@ The idea here is that you take plow and customize it to your liking. I use bluep
 
 ## Usage ##
 
-    bin/plow test                         # runs test script
+    bin/plow whoami production            # runs whoami script on production server
     bin/plow gitrev production            # gets SHA for HEAD on production server
 
 ## Install ##
 
 `cd` to your rails app. Install plow with the following command:
 
-     curl https://raw.github.com/mm53bar/plow/recipes/install.sh | sh
+     curl https://raw.github.com/mm53bar/plow/master/install.sh | sh
 
 Now you'll have `bin/plow` in your app folder. Read `bin/plow` to see how it works and give it a try by running `bin/plow test`.
 
