@@ -23,6 +23,9 @@ declare -a commands
 
 while test $# != 0; do
   case "$1" in
+    spinup)
+      SPINUP=1
+      ;;
     --staging|staging)
       ENVIRONMENT=staging
       ;;
@@ -56,12 +59,6 @@ bail() {
   exit 1
 }
 
-source Plowfile
-for i in "${RECIPES[@]}"
-do
-	recipe $i
-done
-
 if [ ! $ENVIRONMENT ]; then
   bail "No environment specified"
 else
@@ -70,9 +67,44 @@ else
   mkdir -p .plow && cat .env.$ENVIRONMENT > .plow/plow.sh
 fi
 
+if [ $SPINUP ]; then
+  [[ -n $INSTANCE_TYPE && $REGION && $KEYPAIR && $AMI ]] || bail "invalid spinup config"
+  EC2_RUN_RESULT=$(ec2-run-instances --instance-type $INSTANCE_TYPE --group default --region $REGION --key $KEYPAIR $AMI)
+  INSTANCE_NAME=$(echo ${EC2_RUN_RESULT} | sed 's/RESERVATION.*INSTANCE //' | sed 's/ .*//')
+  echo
+
+  TOTAL_TIME=0
+  MAX_TIME=181
+  while [ $MAX_TIME -gt $TOTAL_TIME ] && ! ec2-describe-instances $INSTANCE_NAME | grep -q "running"
+  do
+    TOTAL_TIME=$(( $TOTAL_TIME + 5 ))
+    echo "$INSTANCE_NAME not running. Waiting 5 seconds before checking again..."
+    sleep 5s
+  done
+
+  if [ $MAX_TIME -lt $TOTAL_TIME ]; then
+    bail "Instance $INSTANCE_NAME is taking too long to enter the running state. Exiting..."
+  fi
+
+  echo
+  echo "Instance $INSTANCE_NAME is now running."                                     
+  
+  DESCRIBE_INSTANCE=$(ec2-describe-instances $INSTANCE_NAME)
+  INSTANCE_FQDN=$(echo ${DESCRIBE_INSTANCE} | sed -E 's/RESERVATION.*ami-.{9}//' | sed -E 's/\ .*//')
+  
+  echo "You can ssh into your new instance with the following command:"
+  echo "ssh -o StrictHostKeyChecking=no ubuntu@$INSTANCE_FQDN"
+  exit 0
+fi
+
 if [ ${#commands[@]} == '0' ]; then
   bail "No recipes specified"
 else
+  source Plowfile
+  for i in "${RECIPES[@]}"
+  do
+    recipe $i
+  done  
   for command in "${commands[@]}"
   do
     [[ -f .plow/$command ]] || bail "Recipe '$command' not found"
