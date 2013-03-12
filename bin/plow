@@ -19,38 +19,15 @@ function usage
   echo
 }
 
-recipe() {
-  wget -nc -qP .plow $1
-}
-
-bail() {
-  echo -e "\033[31m  failed: $1\033[0m"
-  exit 1
-}
-
-info() {
-  echo -e "\033[1;33m== $1\033[0m"
-}
-
 declare -a commands
-
-source Plowfile
-for i in "${RECIPES[@]}"
-do
-	recipe $i
-done
 
 while test $# != 0; do
   case "$1" in
     --staging|staging)
-      [[ -f .env.staging ]] || bail "no .env.staging found"
       ENVIRONMENT=staging
-      source .env.$ENVIRONMENT
       ;;
-    --production|production)
-      [[ -f .env.production ]] || bail "no .env.production found"
+    --production|production)      
       ENVIRONMENT=production
-      source .env.$ENVIRONMENT
       ;;
     --sudo|sudo)
       SUDO=sudo
@@ -64,15 +41,53 @@ while test $# != 0; do
       eval ${tmp%=*}=${tmp#*=} 
       ;;
     *)
-      [[ -f .plow/$1 ]] && commands[${#commands[@]}]=".plow/$1"
+      commands[${#commands[@]}]="$1"
       ;;
   esac
   shift
 done
 
-recipe_content=$(find ${commands[@]} -type f | xargs -I % sh -c "echo ; echo 'echo '== Processing recipe: %'' ; cat %")
-environment_content=$(cat .env.$ENVIRONMENT)
-mkdir -p .plow && echo "$environment_content $recipe_content" > .plow/plow.sh
+recipe() {
+  wget -nc -qP .plow $1
+}
+
+bail() {
+  echo -e "\033[31m  failed: $1\033[0m"
+  exit 1
+}
+
+info() {
+  echo -e "\033[1;33m== $1\033[0m"
+}
+
+source Plowfile
+for i in "${RECIPES[@]}"
+do
+	recipe $i
+done
+
+if [ ! $ENVIRONMENT ]; then
+  bail "No environment specified"
+else
+  [[ -f .env.$ENVIRONMENT ]] || bail "no .env.$ENVIRONMENT found"
+  source .env.$ENVIRONMENT
+  mkdir -p .plow && cat .env.$ENVIRONMENT > .plow/plow.sh
+fi
+
+if [ ${#commands[@]} == '0' ]; then
+  bail "No recipes specified"
+else
+  for command in "${commands[@]}"
+  do
+    [[ -f .plow/$command ]] || bail "Recipe '$command' not found"
+    {
+      echo
+      echo "echo -e '\033[1;33m== Processing recipe: $command\033[0m'"
+      cat .plow/$command
+    }  >> .plow/plow.sh
+  done  
+fi
+
 mkdir -p .plow/files && cp ${FILES[@]} .plow/files/
 
 cd .plow && tar cz . | ssh $USER@$SERVER "rm -rf plow && mkdir plow && cd plow && tar xz && $SUDO bash plow.sh"
