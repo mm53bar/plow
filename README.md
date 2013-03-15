@@ -12,6 +12,7 @@ The idea here is that you take plow and customize it to your liking. I use bluep
 
     bin/plow whoami production            # runs whoami script on production server
     bin/plow gitrev production            # gets SHA for HEAD on production server
+    bin/plow --help                       # get usage instructions
 
 ## Install ##
 
@@ -19,7 +20,15 @@ The idea here is that you take plow and customize it to your liking. I use bluep
 
      curl https://raw.github.com/mm53bar/plow/master/install.sh | sh
 
-Now you'll have `bin/plow` in your app folder. Read `bin/plow` to see how it works and give it a try by running `bin/plow test`.
+Now you'll have `bin/plow` in your app folder. Read `bin/plow` to see how it works.
+
+## Plowfile ##
+
+Plow now supports downloading bash scripts as recipes. A Plowfile was adding to the root of your project directory when you first installed Plow. It consists of two sections - recipes and files.
+
+Recipes are a list of URL's to bash scripts on the web that can install specific applications.  See some sample Plow recipes at [amaabca/plow_recipes](https://github.com/amaabca/plow_recipes). Keep in mind that these recipes are just bash - if you can install an app with bash then you can script it using Plow.
+
+Files are a list of file paths on your local system that will be uploaded to the server and made available at ~/.plow/files/. Common files that you might want to upload to your server are your public keys (~/.ssh/id_rsa.pub) or ssl certificates.
 
 ## What's with the .env files? ##
 
