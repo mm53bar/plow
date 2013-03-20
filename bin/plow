@@ -69,28 +69,21 @@ else
   mkdir -p .plow && cat .env.$ENVIRONMENT > .plow/plow.sh
 fi
 
-if [ ! $SERVER ]; then
+if [ $SERVER ]; then
+  SERVERS[${#SERVERS[@]}]=$SERVER
+else
   TAG=${PWD##*/}
   [[ $ROLE ]] && TAG+="_$ROLE"
   TAG+="_$ENVIRONMENT"
-
-  # To get multiple servers, do something like the following:
-  #
-  #    ec2-describe-instances | grep INSTANCE | cut -f 4
-  #
-  #    or
-  #
-  #    ec2-describe-instances | grep INSTANCE | awk {'print $4'}
-  #
-  # Then loop through the lines and pass into an array.
-  #
-  # For now, the 'sed' system is guaranteed to only return one result even if there are multiple.
   
   DESCRIBE_TAG=$(ec2-describe-tags --filter "key=name" --filter "value=$TAG")
-  [[ $DESCRIBE_TAG ]] || bail "no target server found matching '$TAG'"
-  INSTANCE_NAME=$(echo ${DESCRIBE_TAG} | sed -E 's/TAG.*instance.//' | sed -E 's/\ .*//')
-  DESCRIBE_INSTANCE=$(ec2-describe-instances $INSTANCE_NAME)
-  SERVER=$(echo ${DESCRIBE_INSTANCE} | sed -E 's/RESERVATION.*ami-.{9}//' | sed -E 's/\ .*//')
+  [[ $DESCRIBE_TAG ]] || bail "no target server found matching '$TAG'"  
+  INSTANCE_NAMES=($(echo "${DESCRIBE_TAG}" | grep TAG | awk {'print $3'}))
+
+  for instance in ${INSTANCE_NAMES[@]}; do 
+    DESCRIBE_INSTANCE=$(ec2-describe-instances $instance)
+    SERVERS[${#SERVERS[@]}]=$(echo ${DESCRIBE_INSTANCE} | sed -E 's/RESERVATION.*ami-.{9}//' | sed -E 's/\ .*//')
+  done
 fi
 
 if [ ${#commands[@]} == '0' ]; then
@@ -112,6 +105,7 @@ else
   done  
 fi
 
-mkdir -p .plow/files && cp ${FILES[@]} .plow/files/
-
-cd .plow && tar cz . | ssh $USER@$SERVER "rm -rf plow && mkdir plow && cd plow && tar xz && $SUDO bash plow.sh"
+mkdir -p .plow/files && cp ${FILES[@]} .plow/files/ && cd .plow
+for server in ${SERVERS[@]}; do
+  tar cz . | ssh ubuntu@$server "rm -rf plow && mkdir plow && cd plow && tar xz && $SUDO bash plow.sh"
+done
