@@ -74,6 +74,18 @@ if [ ! $SERVER ]; then
   [[ $ROLE ]] && TAG+="_$ROLE"
   TAG+="_$ENVIRONMENT"
 
+  # To get multiple servers, do something like the following:
+  #
+  #    ec2-describe-instances | grep INSTANCE | cut -f 4
+  #
+  #    or
+  #
+  #    ec2-describe-instances | grep INSTANCE | awk {'print $4'}
+  #
+  # Then loop through the lines and pass into an array.
+  #
+  # For now, the 'sed' system is guaranteed to only return one result even if there are multiple.
+  
   DESCRIBE_TAG=$(ec2-describe-tags --filter "key=name" --filter "value=$TAG")
   [[ $DESCRIBE_TAG ]] || bail "no target server found matching '$TAG'"
   INSTANCE_NAME=$(echo ${DESCRIBE_TAG} | sed -E 's/TAG.*instance.//' | sed -E 's/\ .*//')
