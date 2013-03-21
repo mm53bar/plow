@@ -107,5 +107,5 @@ fi
 
 mkdir -p .plow/files && cp ${FILES[@]} .plow/files/ && cd .plow
 for server in ${SERVERS[@]}; do
-  tar cz . | ssh ubuntu@$server "rm -rf plow && mkdir plow && cd plow && tar xz && $SUDO bash plow.sh"
+  tar cz . | ssh $USER@$server "rm -rf plow && mkdir plow && cd plow && tar xz && $SUDO bash plow.sh"
 done
