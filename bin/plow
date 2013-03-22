@@ -31,9 +31,11 @@ while test $# != 0; do
   case "$1" in
     --staging|staging)
       ENVIRONMENT=staging
+      ENV_FILE=.env.$ENVIRONMENT
       ;;
-    --production|production)      
+    --production|production)
       ENVIRONMENT=production
+      ENV_FILE=.env.$ENVIRONMENT
       ;;
     --role)
       shift
@@ -70,9 +72,18 @@ bail() {
   exit 1
 }
 
+<<<<<<< HEAD
 if [ ! $ENVIRONMENT ]; then
   echo "Assuming staging environment..."
   ENVIRONMENT="staging"
+=======
+if [ ! $ENV_FILE ]; then
+  ENV_FILE=.env  
+else
+  [[ -f $ENV_FILE ]] || bail "$ENV_FILE not found"
+  source $ENV_FILE
+  mkdir -p .plow && cat $ENV_FILE > .plow/plow.sh
+>>>>>>> Cleaned up environment file check
 fi
 
 ENV_FILE=.env.$ENVIRONMENT
