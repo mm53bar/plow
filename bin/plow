@@ -75,9 +75,9 @@ else
   TAG=${PWD##*/}
   [[ $ROLE ]] && TAG+="_$ROLE"
   TAG+="_$ENVIRONMENT"
-  
-  DESCRIBE_TAG=$(ec2-describe-tags --filter "key=name" --filter "value=$TAG")
-  [[ $DESCRIBE_TAG ]] || bail "no target server found matching '$TAG'"  
+
+  DESCRIBE_TAG=$(ec2-describe-tags --filter "key=Name" --filter "value=$TAG")
+  [[ $DESCRIBE_TAG ]] || bail "no target server found matching '$TAG'"
   INSTANCE_NAMES=($(echo "${DESCRIBE_TAG}" | grep TAG | awk {'print $3'}))
 
   for instance in ${INSTANCE_NAMES[@]}; do 
