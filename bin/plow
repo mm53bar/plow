@@ -24,7 +24,7 @@ declare -a commands
 
 if test $# = 0; then
   usage
-  exit
+  exit 0
 fi
 
 while test $# != 0; do
@@ -44,7 +44,7 @@ while test $# != 0; do
       ;;
     --help|usage|help)
       usage
-      exit
+      exit 0
       ;;
     --*)
       tmp=${1:2}
