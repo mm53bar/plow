@@ -24,7 +24,7 @@ declare -a commands
 
 if test $# = 0; then
   usage
-  exit 0
+  exit 64
 fi
 
 while test $# != 0; do
