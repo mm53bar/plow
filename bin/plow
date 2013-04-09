@@ -2,23 +2,23 @@
 
 set -e
 
-function usage
+function plow_usage()
 {
   echo
   echo "$(basename $0) runs recipes on your servers"
   echo
-  echo "usage: $(basename $0) [commands [--staging | --production] [--role rolename] [--sudo]] | [--help]"
+  echo "usage: $(basename $0) --env environment [--role rolename] [--sudo] commands | [--help]"
   echo
   echo "       commands           : list of recipes that you want to execute"
   echo "                          :   e.g. postgres nginx rails"
   echo "                          :   (should correspond to recipes in Plowfile)"
-  echo "       --staging          : use .env.staging for configuration"
-  echo "       --production       : use .env.production for configuration"
+  echo "       --env              : choose a target environment .env file"
   echo "       --role             : use role when choosing destination servers"
-  echo "       --help             : displays the information you're reading now"
   echo "       --sudo             : run all commands as sudo"
+  echo "       --help             : displays the information you're reading now"
   echo
 }
+
 
 declare -a commands
 
@@ -29,28 +29,24 @@ fi
 
 while test $# != 0; do
   case "$1" in
-    --staging|staging)
-      ENVIRONMENT=staging
-      ENV_FILE=.env.$ENVIRONMENT
-      ;;
-    --production|production)
-      ENVIRONMENT=production
+    --env)
+      shift
+      ENVIRONMENT=$1
       ENV_FILE=.env.$ENVIRONMENT
       ;;
     --role)
       shift
       ROLE=$1
       ;;
-    --sudo|sudo)
+    --sudo)
       SUDO=sudo
       ;;
+    --user)
+      shift
+      USER=$1
     --help|usage|help)
-      usage
+      plow_usage
       exit
-      ;;
-    --*)
-      tmp=${1:2}
-      eval ${tmp%=*}=${tmp#*=} 
       ;;
     *)
       commands[${#commands[@]}]="$1"
@@ -58,6 +54,7 @@ while test $# != 0; do
   esac
   shift
 done
+
 
 recipe() {
   if command -v wget > /dev/null; then 
@@ -72,18 +69,9 @@ bail() {
   exit 1
 }
 
-<<<<<<< HEAD
 if [ ! $ENVIRONMENT ]; then
   echo "Assuming staging environment..."
   ENVIRONMENT="staging"
-=======
-if [ ! $ENV_FILE ]; then
-  ENV_FILE=.env  
-else
-  [[ -f $ENV_FILE ]] || bail "$ENV_FILE not found"
-  source $ENV_FILE
-  mkdir -p .plow && cat $ENV_FILE > .plow/plow.sh
->>>>>>> Cleaned up environment file check
 fi
 
 ENV_FILE=.env.$ENVIRONMENT
@@ -129,7 +117,7 @@ else
   done  
 fi
 
-mkdir -p .plow/files && cp ${FILES[@]} .plow/files/ && cd .plow
+[[ ${FILES[@]} ]] && mkdir -p .plow/files && cp ${FILES[@]} .plow/files/ && cd .plow
 for server in ${SERVERS[@]}; do
   echo -e "\033[1;35m== Plowing $server\033[0m"
   tar cz . | ssh $DEPLOYER@$server "rm -rf plow && mkdir plow && cd plow && tar xz && $SUDO bash plow.sh"
