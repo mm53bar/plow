@@ -22,6 +22,11 @@ function usage
 
 declare -a commands
 
+if test $# = 0; then
+  usage
+  exit 64 # EX_USAGE - The command was used incorrectly
+fi
+
 while test $# != 0; do
   case "$1" in
     --staging|staging)
@@ -37,7 +42,7 @@ while test $# != 0; do
     --sudo|sudo)
       SUDO=sudo
       ;;
-    --help)
+    --help|usage|help)
       usage
       exit
       ;;
