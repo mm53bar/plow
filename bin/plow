@@ -24,7 +24,7 @@ declare -a commands
 
 if test $# = 0; then
   usage
-  exit 64
+  exit 64 # EX_USAGE - The command was used incorrectly
 fi
 
 while test $# != 0; do
@@ -44,7 +44,7 @@ while test $# != 0; do
       ;;
     --help|usage|help)
       usage
-      exit 0
+      exit
       ;;
     --*)
       tmp=${1:2}
