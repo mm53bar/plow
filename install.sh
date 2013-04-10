@@ -37,7 +37,7 @@
 # Downoad support files
 
       curl -s -L https://raw.github.com/mm53bar/plow/master/Plowfile -o Plowfile
-      curl -s -L https://raw.github.com/mm53bar/plow/master/.env.sample -o .env.sample
+      curl -s -L https://raw.github.com/mm53bar/plow/master/.env.sample >> .env.sample
 
 # Set the permissions for the scripts
 
