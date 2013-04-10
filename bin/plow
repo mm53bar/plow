@@ -66,12 +66,15 @@ bail() {
 }
 
 if [ ! $ENVIRONMENT ]; then
-  bail "No environment specified"
-else
-  [[ -f .env.$ENVIRONMENT ]] || bail "no .env.$ENVIRONMENT found"
-  source .env.$ENVIRONMENT
-  mkdir -p .plow && cat .env.$ENVIRONMENT > .plow/plow.sh
+  echo "Assuming staging environment..."
+  ENVIRONMENT="staging"
 fi
+
+ENV_FILE=.env.$ENVIRONMENT
+[[ -f $ENV_FILE ]] || bail "no $ENV_FILE found"
+source $ENV_FILE
+
+mkdir -p .plow && cat $ENV_FILE > .plow/plow.sh
 
 if [ $SERVER ]; then
   SERVERS[${#SERVERS[@]}]=$SERVER
