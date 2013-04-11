@@ -7,7 +7,7 @@ function plow_usage()
   echo
   echo "$(basename $0) runs recipes on your servers"
   echo
-  echo "usage: $(basename $0) --env environment [--role rolename] [--sudo] commands | [--help]"
+  echo "usage: $(basename $0) [--env environment] [--role rolename] [--sudo] commands | [--help]"
   echo
   echo "       commands           : list of recipes that you want to execute"
   echo "                          :   e.g. postgres nginx rails"
@@ -18,7 +18,6 @@ function plow_usage()
   echo "       --help             : displays the information you're reading now"
   echo
 }
-
 
 declare -a commands
 
@@ -32,7 +31,6 @@ while test $# != 0; do
     --env)
       shift
       ENVIRONMENT=$1
-      ENV_FILE=.env.$ENVIRONMENT
       ;;
     --role)
       shift
@@ -44,8 +42,8 @@ while test $# != 0; do
     --user)
       shift
       USER=$1
-    --help|usage|help)
-      plow_usage
+    --help|--usage)
+      usage
       exit
       ;;
     *)
@@ -54,7 +52,6 @@ while test $# != 0; do
   esac
   shift
 done
-
 
 recipe() {
   if command -v wget > /dev/null; then 
