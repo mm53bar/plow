@@ -42,6 +42,7 @@ while test $# != 0; do
     --user)
       shift
       USER=$1
+      ;;
     --help|--usage)
       usage
       exit
