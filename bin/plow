@@ -7,14 +7,16 @@ function plow_usage()
   echo
   echo "$(basename $0) runs recipes on your servers"
   echo
-  echo "usage: $(basename $0) [--env environment] [--role rolename] [--sudo] commands | [--help]"
+  echo "usage: $(basename $0) [staging | production] [role rolename] [sudo] [user username] commands | [--help]"
   echo
   echo "       commands           : list of recipes that you want to execute"
   echo "                          :   e.g. postgres nginx rails"
   echo "                          :   (should correspond to recipes in Plowfile)"
-  echo "       --env              : choose a target environment .env file"
-  echo "       --role             : use role when choosing destination servers"
-  echo "       --sudo             : run all commands as sudo"
+  echo "       staging            : use .env.staging for configuration"
+  echo "       production         : use .env.production for configuration"
+  echo "       user               : specify a user that overrides \$DEPLOYER"
+  echo "       role               : use role when choosing destination servers"
+  echo "       sudo               : run all commands as sudo"
   echo "       --help             : displays the information you're reading now"
   echo
 }
@@ -28,22 +30,24 @@ fi
 
 while test $# != 0; do
   case "$1" in
-    --env)
-      shift
-      ENVIRONMENT=$1
+    --staging|staging)
+      ENVIRONMENT=staging
       ;;
-    --role)
+    --production|production)      
+      ENVIRONMENT=production
+      ;;
+    --role|role)
       shift
       ROLE=$1
       ;;
-    --sudo)
+    --sudo|sudo)
       SUDO=sudo
       ;;
-    --user)
+    --user|user)
       shift
       OVERRIDE_USER=$1
       ;;
-    --help|--usage)
+    --help|--usage|help|usage)
       usage
       exit
       ;;
@@ -114,8 +118,6 @@ else
     }  >> .plow/plow.sh
   done  
 fi
-
-[[ OVERRIDE_USER ]] && SSH_USER=$OVERRIDE_USER
 
 [[ ${FILES[@]} ]] && mkdir -p .plow/files && cp ${FILES[@]} .plow/files/ && cd .plow
 for server in ${SERVERS[@]}; do
