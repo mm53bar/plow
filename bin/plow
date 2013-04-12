@@ -41,7 +41,7 @@ while test $# != 0; do
       ;;
     --user)
       shift
-      USER=$1
+      OVERRIDE_USER=$1
       ;;
     --help|--usage)
       usage
@@ -114,6 +114,8 @@ else
     }  >> .plow/plow.sh
   done  
 fi
+
+[[ OVERRIDE_USER ]] && SSH_USER=$OVERRIDE_USER
 
 [[ ${FILES[@]} ]] && mkdir -p .plow/files && cp ${FILES[@]} .plow/files/ && cd .plow
 for server in ${SERVERS[@]}; do
