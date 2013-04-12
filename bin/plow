@@ -119,6 +119,8 @@ else
   done  
 fi
 
+[[ OVERRIDE_USER ]] && USER=$OVERRIDE_USER
+
 [[ ${FILES[@]} ]] && mkdir -p .plow/files && cp ${FILES[@]} .plow/files/ && cd .plow
 for server in ${SERVERS[@]}; do
   echo -e "\033[1;35m== Plowing $server\033[0m"
