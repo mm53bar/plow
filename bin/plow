@@ -119,7 +119,7 @@ else
   done  
 fi
 
-[[ OVERRIDE_USER ]] && USER=$OVERRIDE_USER
+[[ OVERRIDE_USER ]] && DEPLOYER=$OVERRIDE_USER
 
 [[ ${FILES[@]} ]] && mkdir -p .plow/files && cp ${FILES[@]} .plow/files/ && cd .plow
 for server in ${SERVERS[@]}; do
