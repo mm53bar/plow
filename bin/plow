@@ -2,7 +2,7 @@
 
 set -e
 
-function plow_usage()
+function usage()
 {
   echo
   echo "$(basename $0) runs recipes on your servers"
