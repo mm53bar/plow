@@ -174,7 +174,11 @@ fi
 
 [[ $OVERRIDE_USER ]] && DEPLOYER=$OVERRIDE_USER
 
-[[ ${FILES[@]} ]] && mkdir -p .plow/files && cp ${FILES[@]} .plow/files/ && cd .plow
+mkdir -p .plow/files
+[[ ${FILES[@]} ]] && cp ${FILES[@]} .plow/files/
+cp $ENV_FILE .plow/env
+
+cd .plow
 for server in ${SERVERS[@]}; do
   echo -e "\033[1;35m== Plowing $server\033[0m"
   tar cz . | ssh -o ConnectTimeout=120 $DEPLOYER@$server "rm -rf plow && mkdir plow && cd plow && tar xz && $SUDO bash plow.sh"
