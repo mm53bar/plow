@@ -22,6 +22,7 @@ function usage()
 }
 
 declare -a commands
+declare -a env_variables
 
 if test $# = 0; then
   usage
@@ -48,8 +49,7 @@ while test $# != 0; do
       OVERRIDE_USER=$1
       ;;
     --*)
-      tmp=${1:2}
-      eval ${tmp%=*}=${tmp#*=} 
+      env_variables[${#env_variables[@]}]=${1:2}
       ;;      
     --help|--usage|help|usage)
       usage
@@ -85,6 +85,11 @@ ENV_FILE=.env.$ENVIRONMENT
 source $ENV_FILE
 
 mkdir -p .plow && cat $ENV_FILE > .plow/plow.sh
+
+for env_variable in "${env_variables[@]}"
+do
+  echo "$env_variable" >> .plow/plow.sh
+done
 
 if [ $SERVER ]; then
   SERVERS[${#SERVERS[@]}]=$SERVER
