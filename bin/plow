@@ -2,6 +2,51 @@
 
 set -e
 
+###############################################################################
+#                              START OF ROVER
+#
+# These are shared functions used by pave and plow to interact with EC2.
+#
+###############################################################################
+
+# Get the IP address of a server given it's Amazon EC2 instance name
+#
+# $1 = EC2 instance id
+get_instance_ip() {
+  local INSTANCE_ID=$1
+  local DESCRIBE_INSTANCE=$(ec2-describe-instances --filter "instance-state-name=running" $INSTANCE_ID)
+
+  local IP_ADDR=$(echo "$DESCRIBE_INSTANCE" | grep "NIC\s" | cut -f 7)
+  if [ ! $IP_ADDR ]; then
+    # We're running without a subnet
+    local IP_ADDR=$(echo "$DESCRIBE_INSTANCE" | grep "INSTANCE" | cut -f 17)
+  fi
+
+  echo $IP_ADDR
+}
+
+# Wait for EC2 to complete provisioning a new instance before continuing.
+wait_for_instance_to_be_provisioned() {
+  local INSTANCE_NAME=$1
+
+  local TOTAL_TIME=0
+  local MAX_TIME=181
+  while [ $MAX_TIME -gt $TOTAL_TIME ] && ! ec2-describe-instances $INSTANCE_NAME | grep -q "running"
+  do
+    TOTAL_TIME=$(( $TOTAL_TIME + 5 ))
+    echo "$INSTANCE_NAME not running. Waiting 5 seconds before checking again..."
+    sleep 5s
+  done
+
+  if [ $MAX_TIME -lt $TOTAL_TIME ]; then
+    bail "Instance $INSTANCE_NAME is taking too long to enter the running state. Exiting..."
+  fi
+}
+
+###############################################################################
+#                               END OF ROVER
+###############################################################################
+
 function usage()
 {
   echo
@@ -103,8 +148,7 @@ else
   INSTANCE_NAMES=($(echo "${DESCRIBE_TAG}" | grep TAG | awk {'print $3'}))
 
   for instance in ${INSTANCE_NAMES[@]}; do 
-    DESCRIBE_INSTANCE=$(ec2-describe-instances --filter "instance-state-name=running" $instance)
-    SERVERS[${#SERVERS[@]}]=$(echo ${DESCRIBE_INSTANCE} | sed -E 's/RESERVATION.*ami-.{9}//' | sed -E 's/\ .*//')
+    SERVERS[${#SERVERS[@]}]=$(get_instance_ip $instance)
   done
 fi
 
