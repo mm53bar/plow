@@ -47,6 +47,10 @@ while test $# != 0; do
       shift
       OVERRIDE_USER=$1
       ;;
+    --*)
+      tmp=${1:2}
+      eval ${tmp%=*}=${tmp#*=} 
+      ;;      
     --help|--usage|help|usage)
       usage
       exit
