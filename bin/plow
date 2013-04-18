@@ -9,6 +9,16 @@ set -e
 #
 ###############################################################################
 
+# Get the names of instances matching a specific server name
+#
+# $1 = name of the server (the "Name" tag of the EC2 instances)
+get_instances_by_name() {
+  local NAME_TAG=$1
+  DESCRIBE_TAG=$(ec2-describe-tags --filter "key=Name" --filter "value=$NAME_TAG")
+  [[ $DESCRIBE_TAG ]] || bail "no target server found matching '$NAME_TAG'"
+  echo $(echo "${DESCRIBE_TAG}" | grep TAG | awk {'print $3'})
+}
+
 # Get the IP address of a server given it's Amazon EC2 instance name
 #
 # $1 = EC2 instance id
@@ -139,13 +149,11 @@ done
 if [ $SERVER ]; then
   SERVERS[${#SERVERS[@]}]=$SERVER
 else
-  TAG=${PWD##*/}
-  [[ $ROLE ]] && TAG+="_$ROLE"
-  TAG+="_$ENVIRONMENT"
+  NAME_TAG=${PWD##*/}
+  [[ $ROLE ]] && NAME_TAG+="_$ROLE"
+  NAME_TAG+="_$ENVIRONMENT"
 
-  DESCRIBE_TAG=$(ec2-describe-tags --filter "key=Name" --filter "value=$TAG")
-  [[ $DESCRIBE_TAG ]] || bail "no target server found matching '$TAG'"
-  INSTANCE_NAMES=($(echo "${DESCRIBE_TAG}" | grep TAG | awk {'print $3'}))
+  INSTANCE_NAMES=$(get_instances_by_name $NAME_TAG)
 
   for instance in ${INSTANCE_NAMES[@]}; do 
     SERVERS[${#SERVERS[@]}]=$(get_instance_ip $instance)
