@@ -129,7 +129,9 @@ ENV_FILE=.env.$ENVIRONMENT
 [[ -f $ENV_FILE ]] || bail "no $ENV_FILE found"
 source $ENV_FILE
 
-mkdir -p .plow && echo "source ./env" > .plow/plow.sh
+mkdir -p .plow && echo "
+# set environmental variables
+source ./env" > .plow/plow.sh
 
 for env_variable in "${env_variables[@]}"
 do
