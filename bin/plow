@@ -129,7 +129,9 @@ ENV_FILE=.env.$ENVIRONMENT
 [[ -f $ENV_FILE ]] || bail "no $ENV_FILE found"
 source $ENV_FILE
 
-mkdir -p .plow && cat $ENV_FILE > .plow/plow.sh
+mkdir -p .plow && echo "
+# set environmental variables
+source ./env" > .plow/plow.sh
 
 for env_variable in "${env_variables[@]}"
 do
@@ -174,7 +176,11 @@ fi
 
 [[ $OVERRIDE_USER ]] && DEPLOYER=$OVERRIDE_USER
 
-[[ ${FILES[@]} ]] && mkdir -p .plow/files && cp ${FILES[@]} .plow/files/ && cd .plow
+mkdir -p .plow/files
+[[ ${FILES[@]} ]] && cp ${FILES[@]} .plow/files/
+cp $ENV_FILE .plow/env
+
+cd .plow
 for server in ${SERVERS[@]}; do
   echo -e "\033[1;35m== Plowing $server\033[0m"
   tar cz . | ssh -o ConnectTimeout=120 $DEPLOYER@$server "rm -rf plow && mkdir plow && cd plow && tar xz && $SUDO bash plow.sh"
