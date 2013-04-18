@@ -153,7 +153,7 @@ else
   [[ $ROLE ]] && NAME_TAG+="_$ROLE"
   NAME_TAG+="_$ENVIRONMENT"
 
-  INSTANCE_NAMES=$(get_instances_by_name $NAME_TAG)
+  INSTANCE_NAMES=($(get_instances_by_name $NAME_TAG))
 
   for instance in ${INSTANCE_NAMES[@]}; do 
     SERVERS[${#SERVERS[@]}]=$(get_instance_ip $instance)
