@@ -72,7 +72,7 @@ function usage()
   echo "       user               : specify a user that overrides \$DEPLOYER"
   echo "       role               : use role when choosing destination servers"
   echo "       sudo               : run all commands as sudo"
-  echo "       clean              : delete the .plow directory before downloading the recipes"
+  echo "       clean              : delete the .plow directory before downloading the recipes and files"
   echo "       --help             : displays the information you're reading now"
   echo
 }
