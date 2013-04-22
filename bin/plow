@@ -134,10 +134,14 @@ bail() {
   exit 1
 }
 
-clean() {
+cleanup() {
   rm -rf .plow
   mkdir -p .plow
 }
+
+if [[ $CLEAN ]]; then
+  cleanup
+fi
 
 if [ ! $ENVIRONMENT ]; then
   echo "Assuming staging environment..."
@@ -175,9 +179,6 @@ if [ ${#commands[@]} == '0' ]; then
   bail "No recipes specified"
 else
   source Plowfile
-  if [[ $CLEAN ]]; then
-    clean
-  fi
   echo -e "\033[1;33m== Downloading recipes $command\033[0m"
   for i in "${RECIPES[@]}"
   do
