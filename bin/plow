@@ -62,7 +62,7 @@ function usage()
   echo
   echo "$(basename $0) runs recipes on your servers"
   echo
-  echo "usage: $(basename $0) [staging | production] [role rolename] [sudo] [user username] commands | [--help]"
+  echo "usage: $(basename $0) [staging | production] [role rolename] [sudo] [clean] [user username] commands | [--help]"
   echo
   echo "       commands           : list of recipes that you want to execute"
   echo "                          :   e.g. postgres nginx rails"
@@ -72,6 +72,7 @@ function usage()
   echo "       user               : specify a user that overrides \$DEPLOYER"
   echo "       role               : use role when choosing destination servers"
   echo "       sudo               : run all commands as sudo"
+  echo "       clean              : delete the .plow directory before downloading the recipes and files"
   echo "       --help             : displays the information you're reading now"
   echo
 }
@@ -89,7 +90,7 @@ while test $# != 0; do
     --staging|staging)
       ENVIRONMENT=staging
       ;;
-    --production|production)      
+    --production|production)
       ENVIRONMENT=production
       ;;
     --role|role)
@@ -105,10 +106,13 @@ while test $# != 0; do
       ;;
     --*)
       env_variables[${#env_variables[@]}]=${1:2}
-      ;;      
+      ;;
     --help|--usage|help|usage)
       usage
       exit
+      ;;
+    --clean|clean)
+      CLEAN=true
       ;;
     *)
       commands[${#commands[@]}]="$1"
@@ -118,16 +122,21 @@ while test $# != 0; do
 done
 
 recipe() {
-  if command -v wget > /dev/null; then 
+  if command -v wget > /dev/null; then
     wget -nc -q -P .plow $1
   else
     bail "wget not installed: brew install wget"
-  fi 
+  fi
 }
 
 bail() {
   echo -e "\033[31m  failed: $1\033[0m"
   exit 1
+}
+
+clean() {
+  rm -rf .plow
+  mkdir -p .plow
 }
 
 if [ ! $ENVIRONMENT ]; then
@@ -157,7 +166,7 @@ else
 
   INSTANCE_NAMES=($(get_instances_by_name $NAME_TAG))
 
-  for instance in ${INSTANCE_NAMES[@]}; do 
+  for instance in ${INSTANCE_NAMES[@]}; do
     SERVERS[${#SERVERS[@]}]=$(get_instance_ip $instance)
   done
 fi
@@ -166,10 +175,14 @@ if [ ${#commands[@]} == '0' ]; then
   bail "No recipes specified"
 else
   source Plowfile
+  if [[ $CLEAN ]]; then
+    clean
+  fi
+  echo -e "\033[1;33m== Downloading recipes $command\033[0m"
   for i in "${RECIPES[@]}"
   do
     recipe $i
-  done  
+  done
   for command in "${commands[@]}"
   do
     command_file=$(find .plow -type f \( -name "$command" -or -name "$command.sh" \))
@@ -179,7 +192,7 @@ else
       echo "echo -e '\033[1;33m== Processing recipe: $command\033[0m'"
       cat $command_file
     }  >> .plow/plow.sh
-  done  
+  done
 fi
 
 [[ $OVERRIDE_USER ]] && DEPLOYER=$OVERRIDE_USER
