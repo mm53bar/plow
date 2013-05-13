@@ -154,7 +154,12 @@ source $ENV_FILE
 
 mkdir -p .plow && echo "
 # set environmental variables
-source ./env" > .plow/plow.sh
+source ./env
+
+bail() {
+  echo -e "\033[31m  failed: $1\033[0m"
+  exit 1
+}" > .plow/plow.sh
 
 for env_variable in "${env_variables[@]}"
 do
