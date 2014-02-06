@@ -123,7 +123,7 @@ done
 
 recipe() {
   if command -v wget > /dev/null; then
-    wget -nc -q -P .plow $1
+    wget -nc -q -P .plow $1 || bail "$1 recipe does not exist."
   else
     bail "wget not installed: brew install wget"
   fi
