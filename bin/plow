@@ -199,8 +199,16 @@ fi
 [[ $OVERRIDE_USER ]] && DEPLOYER=$OVERRIDE_USER
 
 mkdir -p .plow/files
-[[ ${FILES[@]} ]] && cp ${FILES[@]} .plow/files/
-cp $ENV_FILE .plow/env
+for file in ${FILES[@]}
+do
+  if [ -f $file ] ; then
+    cp $file .plow/files/
+  else
+    echo -e "\033[31m  $file does not exist. Skipping.\033[0m"
+  fi
+done
+
+cp -v $ENV_FILE .plow/env
 
 cd .plow
 for server in ${SERVERS[@]}; do
